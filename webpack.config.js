@@ -1,9 +1,10 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const Dotenv = require("dotenv-webpack");
 
-module.exports = {
-  mode: "development",
+const config = {
+  mode: process.env.REACT_APP_WEBPACK_MODE,
   entry: path.join(__dirname, "src", "index.tsx"),
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -43,5 +44,17 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "src", "index.html"),
     }),
+    new Dotenv(),
   ],
+};
+module.exports = (env, argv) => {
+  console.log("Webpack Config", process.env.REACT_APP_WEBPACK_MODE, {
+    env,
+    argv,
+  });
+  config.mode = argv.mode;
+  // if (argv.mode === 'development') {
+  //   config.devtool = 'source-map';
+  // }
+  return config;
 };
