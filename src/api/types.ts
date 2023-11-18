@@ -1,6 +1,12 @@
+export type IsortOption =
+  | "followers"
+  | "repositories"
+  | "joined"
+  | undefined
+  | null;
 export interface IFetchUserByName {
   name: string;
-  sort?: "followers" | "repositories" | "joined" | undefined;
+  sort?: IsortOption;
   order?: "asc" | "desc" | undefined;
   per_page?: number | undefined;
   page?: number | undefined;

@@ -21,6 +21,7 @@ function App() {
     <div className="flex-col root-app-body">
       <Header />
       <Search
+        searchVal={reqParams.name}
         onTextInput={(val) => {
           setSearch(val);
           if (val?.length) {
@@ -32,6 +33,18 @@ function App() {
               searchQuery: val,
             });
           }
+        }}
+        handleFilter={(val) => {
+          fetchUsers(
+            {
+              name: reqParams.name,
+              sort: val?.length ? val : null,
+            },
+            true
+          );
+          mixpanel.track("Filter Applied", {
+            filter: val,
+          });
         }}
       />
       <div className="flex flex-col items-center justify-center">
@@ -49,7 +62,7 @@ function App() {
               fetchMore={() => {
                 fetchUsers({
                   name: search,
-                  page: reqParams.page,
+                  page: reqParams.page + 1,
                 });
                 mixpanel.track("Pagination Table", {
                   page_no: reqParams.page,

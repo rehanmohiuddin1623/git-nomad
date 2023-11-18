@@ -9,10 +9,12 @@ const useData = <T, U>() => {
     per_page?: number | undefined;
     order?: "asc" | "desc";
     loading: boolean;
+    name: string;
   }>({
     per_page: 10,
     page: 1,
     loading: false,
+    name: "",
   });
   const [response, setResponse] = useState<{
     data: U | null;
@@ -23,7 +25,10 @@ const useData = <T, U>() => {
   });
   const prevResp = response.data as any;
 
-  const fetchHandler = async <W extends IFetchUserByName>(params: W) => {
+  const fetchHandler = async <W extends IFetchUserByName>(
+    params: W,
+    sort = false
+  ) => {
     try {
       if (!prevResp?.items?.length) {
         setReqParam({
@@ -36,10 +41,9 @@ const useData = <T, U>() => {
       setReqParam((req_param) => ({
         ...req_param,
         ...params,
-        page: req_param.page + 1,
         loading: false,
       }));
-      if (prevResp && prevResp?.items?.length && data) {
+      if (prevResp && prevResp?.items?.length && data && !sort) {
         const merged: any = [...prevResp.items, ...data.items];
         setResponse({
           ...response,

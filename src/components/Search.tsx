@@ -1,6 +1,18 @@
 import React from "react";
+import { TABLE_SORT_OPTIONS } from "../constants";
+import { IsortOption } from "../api/types";
 
-const Search = ({ onTextInput }: { onTextInput: (val: string) => void }) => {
+const Search = ({
+  onTextInput,
+  handleFilter,
+  sort,
+  searchVal,
+}: {
+  onTextInput: (val: string) => void;
+  handleFilter: (val: IsortOption) => void;
+  sort?: IsortOption;
+  searchVal: string;
+}) => {
   const debounce = (cb: (val: string) => void, timeout: number) => {
     let timer: NodeJS.Timeout | null = null;
     return (val: string) => {
@@ -22,6 +34,19 @@ const Search = ({ onTextInput }: { onTextInput: (val: string) => void }) => {
         onChange={(e) => handleOnChange(e.target.value)}
         id="search-user-name"
       />
+      {searchVal.length && (
+        <select
+          onChange={(e) => handleFilter(e.target.value as IsortOption)}
+          className="font-sans bg-slate-100 w-32 h-8 text-slate-500 rounded-sm p-1 shadow-lg shadow-gray-200 border-none "
+        >
+          {!sort && <option value={""}>Select Sort</option>}{" "}
+          {TABLE_SORT_OPTIONS.map((val) => (
+            <option value={val} className="p-1 border-none">
+              {val}
+            </option>
+          ))}
+        </select>
+      )}
     </div>
   );
 };

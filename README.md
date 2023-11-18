@@ -9,6 +9,7 @@ Features :
 
 * Search Users
 * Infinite Scroll Pagination
+* Sort
 * View Data
 * Error Handling
 * Empty State Handling
