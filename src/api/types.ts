@@ -33,3 +33,12 @@ export interface IData {
   items: IUserItem[];
   total_count: number;
 }
+
+export interface IReqParams {
+  page: number;
+  sort?: string;
+  per_page?: number | undefined;
+  order?: "asc" | "desc";
+  loading: boolean;
+  name: string;
+}

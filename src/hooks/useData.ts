@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchUserByName } from "../api/fetchUser";
-import { IFetchUserByName } from "../api/types";
+import { IData, IFetchUserByName, IUserItem } from "../api/types";
 
 const useData = <T, U>() => {
   const [reqParams, setReqParam] = useState<{
@@ -21,40 +21,49 @@ const useData = <T, U>() => {
     data: null,
     error: null,
   });
+  const prevResp = response.data as any;
 
   const fetchHandler = async <W extends IFetchUserByName>(params: W) => {
-    let resp: {
-      data: U | null;
-      loading: boolean;
-      error: Error | null | unknown;
-    } = {
-      data: null,
-      loading: false,
-      error: null,
-    };
-    setReqParam({
-      ...reqParams,
-      loading: true,
-    });
     try {
+      if (!prevResp?.items?.length) {
+        setReqParam({
+          ...reqParams,
+          loading: true,
+        });
+      }
       const res = await fetchUserByName({ ...reqParams, ...params });
-      const data = await res.json();
-      resp.data = data;
+      const data: U & IData = await res.json();
+      setReqParam((req_param) => ({
+        ...req_param,
+        ...params,
+        page: req_param.page + 1,
+        loading: false,
+      }));
+      if (prevResp && prevResp?.items?.length && data) {
+        const merged: any = [...prevResp.items, ...data.items];
+        setResponse({
+          ...response,
+          data: {
+            ...data,
+            items: [...merged],
+          },
+        });
+      } else {
+        setResponse({ ...response, data: { ...data } });
+      }
     } catch (e: unknown) {
       let message = "Something Went Wrong !!";
       if ((e as Error)?.message) {
         message = (e as Error)?.message;
       }
-      resp.error = message;
-    } finally {
-      setResponse({ ...resp });
-      setReqParam({ ...reqParams, ...params, loading: false });
+      setResponse({ ...response, error: message });
+      setReqParam({ ...reqParams, loading: false });
     }
   };
 
   return {
-    requestState: reqParams,
-    responseState: response,
+    reqParams,
+    response,
     fetchUsers: fetchHandler,
   } as const;
 };
