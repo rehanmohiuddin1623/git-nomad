@@ -15,9 +15,9 @@ const Search = ({ onTextInput }: { onTextInput: (val: string) => void }) => {
 
   const handleOnChange = debounce(onTextInput, 300);
   return (
-    <div className="flex flex-col">
+    <div className="flex  justify-between pl-4 pr-4">
       <input
-        className="p-4 m-4 mt-0 border-2 border-solid border-slate-500  focus:outline-none focus:border-indigo-500 "
+        className="p-4 m-4 mt-0 border-2 border-solid border-slate-500  focus:outline-none focus:border-indigo-500 w-72 "
         placeholder="Search Name Eg : John Doe"
         onChange={(e) => handleOnChange(e.target.value)}
         id="search-user-name"

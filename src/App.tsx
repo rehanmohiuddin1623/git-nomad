@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "./components/Header";
 import "./styles.css";
 import useData from "./hooks/useData";
@@ -10,7 +10,7 @@ import mixpanel from "mixpanel-browser";
 
 function App() {
   const { requestState, responseState, fetchUsers } = useData<null, IData>();
-  console.log("Users", process.env.REACT_APP_GITHUB_ENDPOINT);
+  const [search, setSearch] = useState("");
   useEffect(() => {
     mixpanel.track("Home Page Loaded");
   }, []);
@@ -19,12 +19,15 @@ function App() {
       <Header />
       <Search
         onTextInput={(val) => {
-          fetchUsers({
-            name: val,
-          });
-          mixpanel.track("Search Action", {
-            searchQuery: val,
-          });
+          setSearch(val);
+          if (val?.length) {
+            fetchUsers({
+              name: val,
+            });
+            mixpanel.track("Search Action", {
+              searchQuery: val,
+            });
+          }
         }}
       />
       <div className="flex justify-center">
@@ -34,8 +37,11 @@ function App() {
             loading: requestState.loading,
             error: responseState.error as string | null,
           }}
+          search={search}
         >
-          <TableView items={responseState.data?.items ?? []} />
+          <>
+            <TableView items={responseState.data?.items ?? []} />
+          </>
         </ComponentHandler>
       </div>
     </div>
