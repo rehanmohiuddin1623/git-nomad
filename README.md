@@ -3,6 +3,8 @@
 
 A Simple Github User Search App
 
+## Deployed URL : [Here](https://git-nomad.vercel.app/)!
+
 Features : 
 
 * Search Users
