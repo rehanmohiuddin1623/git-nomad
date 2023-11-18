@@ -44,17 +44,10 @@ const config = {
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "src", "index.html"),
     }),
-    new Dotenv(),
+    new Dotenv({ systemvars: true }),
   ],
 };
 module.exports = (env, argv) => {
-  console.log("Webpack Config", process.env.REACT_APP_WEBPACK_MODE, {
-    env,
-    argv,
-  });
   config.mode = argv.mode;
-  // if (argv.mode === 'development') {
-  //   config.devtool = 'source-map';
-  // }
   return config;
 };
