@@ -6,14 +6,13 @@ import TableView from "./components/TableView";
 import { IData } from "./api/types";
 import Search from "./components/Search";
 import ComponentHandler from "./components/ComponentHandler";
+import mixpanel from "mixpanel-browser";
 
 function App() {
   const { requestState, responseState, fetchUsers } = useData<null, IData>();
-  console.log("Users", responseState);
+  console.log("Users", process.env.REACT_APP_GITHUB_ENDPOINT);
   useEffect(() => {
-    fetchUsers({
-      name: "rehan",
-    });
+    mixpanel.track("Home Page Loaded");
   }, []);
   return (
     <div className="flex-col root-app-body">
@@ -22,6 +21,9 @@ function App() {
         onTextInput={(val) => {
           fetchUsers({
             name: val,
+          });
+          mixpanel.track("Search Action", {
+            searchQuery: val,
           });
         }}
       />
