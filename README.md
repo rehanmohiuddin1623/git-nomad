@@ -8,6 +8,7 @@ A Simple Github User Search App
 Features : 
 
 * Search Users
+* Infinite Scroll Pagination
 * View Data
 * Error Handling
 * Empty State Handling
